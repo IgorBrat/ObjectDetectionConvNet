@@ -1,0 +1,7 @@
+ultralytics==8.0.32
+supervision==0.2.1
+opencv-python~=4.7.0.72
+numpy~=1.24.2
+roboflow~=1.0.5
+pyrealsense2~=2.53.1.4623
+Flask~=2.3.2
