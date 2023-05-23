@@ -67,12 +67,12 @@ def stream(
         depth_colormap = cv2.resize(depth_colormap, resolution)
         color_frame = cv2.resize(color_frame, resolution)
         frames = np.hstack((color_frame, depth_colormap))
-
-        # # TODO: FIX YIELDING - that solution desynchronises
-        # if is_web:
-        #     yield (b'--frame\r\n'
-        #            b'Content-Type: image/jpeg\r\n\r\n' + cv2.imencode('.jpg', depth_colormap)[1].tobytes() + b'\r\n')
-        cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-        cv2.imshow('RealSense', frames)
+        if not is_web:
+            cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
+            cv2.imshow('RealSense', frames)
+        # TODO: somehow cv2 won`t work using if-else with yielding
+        else:
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + cv2.imencode('.jpg', color_frame)[1].tobytes() + b'\r\n')
 
     cv2.destroyAllWindows()
