@@ -28,4 +28,4 @@ def depth_video():
 if __name__ == "__main__":
     model, pipeline = configuration()
     print("Ready to go!")
-    app.run(debug=False)
+    app.run(debug=False, host="0.0.0.0")

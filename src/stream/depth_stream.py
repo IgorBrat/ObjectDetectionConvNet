@@ -41,15 +41,15 @@ def stream(
         fps = str(int(1 / (new_frame_time - prev_frame_time)))
         prev_frame_time = new_frame_time
 
-        # putting the FPS count on the frame
-        cv2.putText(color_frame, fps, (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (100, 255, 0), 3, cv2.LINE_AA)
-
         if saved_predictions:
             plot_predictions(color_frame, saved_predictions)
             plot_predictions(depth_colormap, saved_predictions)
 
         if counter == counter_interrupt:
             counter = 0
+
+            # color_frame = cv2.resize(color_frame, (200, 200))
+
             # get predictions
             response = model.predict(color_frame).json()
             predictions = response["predictions"]
@@ -63,16 +63,19 @@ def stream(
 
             # TODO: Fix
             # write_results('../../resources/' + file, formatted_predictions)
+        # putting the FPS count on the frame
+        cv2.putText(color_frame, fps, (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (100, 255, 0), 3, cv2.LINE_AA)
 
         depth_colormap = cv2.resize(depth_colormap, resolution)
         color_frame = cv2.resize(color_frame, resolution)
         frames = np.hstack((color_frame, depth_colormap))
-        if not is_web:
-            cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-            cv2.imshow('RealSense', frames)
-        # TODO: somehow cv2 won`t work using if-else with yielding
-        else:
+
+        if is_web:
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + cv2.imencode('.jpg', color_frame)[1].tobytes() + b'\r\n')
+        else:
+            cv2.startWindowThread()
+            cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
+            cv2.imshow('RealSense', frames)
 
     cv2.destroyAllWindows()
