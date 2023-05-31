@@ -1,5 +1,3 @@
-from roboflow import Roboflow
-import pyrealsense2 as rs
 from src.stream.depth_stream import stream
 from src.application.config.config import configuration
 import argparse
@@ -24,9 +22,9 @@ model, pipeline = configuration()
 stream(
     model=model,
     pipeline=pipeline,
-    # resolution=tuple(args.resolution),
-    # counter_interrupt=args.interrupt,
-    # file=args.file,
+    resolution=tuple(args.resolution),
+    counter_interrupt=args.interrupt,
+    file=args.file,
     is_web=False,
 )
 

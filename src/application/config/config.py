@@ -7,8 +7,8 @@ def configuration():
     # region Roboflow
 
     rf = Roboflow(api_key=resources.config.API_KEY)
-    project = rf.workspace("meva").project("hard-hat-sample-2zw77")
-    model = project.version(2).model
+    project = rf.workspace("meva").project(resources.config.PROJECT)
+    model = project.version(resources.config.VERSION).model
 
     # endregion
 

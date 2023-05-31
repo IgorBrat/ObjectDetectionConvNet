@@ -1,4 +1,3 @@
-import cv2
 from flask import Flask, render_template, Response
 
 from src.application.config.config import configuration
