@@ -25,7 +25,6 @@ stream(
     pipeline=pipeline,
     resolution=tuple(args.resolution),
     counter_interrupt=args.interrupt,
-    file=args.file,
 )
 
 # endregion
