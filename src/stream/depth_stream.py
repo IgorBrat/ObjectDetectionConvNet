@@ -5,7 +5,6 @@ import time
 from src.depth.depth import set_predictions_depth
 from src.format_utils.format import format_preds, get_colormap
 from src.graphic_utils.plot_boxes import plot_predictions
-from src.write_utils.writer_csv import write_results
 
 
 def stream(
@@ -13,7 +12,6 @@ def stream(
         pipeline,
         resolution: tuple[int, int] = (720, 564),
         counter_interrupt: int = 30,
-        file: str = 'results.csv',
         is_web: bool = False,
 ):
     prev_frame_time = 0
@@ -61,8 +59,6 @@ def stream(
 
             set_predictions_depth(init_depth_frame, formatted_predictions)
 
-            # TODO: Fix
-            # write_results('../../resources/' + file, formatted_predictions)
         # putting the FPS count on the frame
         cv2.putText(color_frame, fps, (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (100, 255, 0), 3, cv2.LINE_AA)
 

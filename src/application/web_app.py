@@ -1,6 +1,6 @@
 from flask import Flask, render_template, Response
 
-from src.application.config.config import configuration
+from src.application.config.config import Configuration
 from src.stream.depth_stream import stream
 
 app = Flask(__name__)
@@ -25,6 +25,7 @@ def depth_video():
 
 
 if __name__ == "__main__":
-    model, pipeline = configuration()
+    conf = Configuration()
+    model, pipeline = conf.get_configuration()
     print("Ready to go!")
     app.run(debug=False, host="0.0.0.0")

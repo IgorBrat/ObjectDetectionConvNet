@@ -1,5 +1,5 @@
 from src.stream.depth_stream import stream
-from src.application.config.config import configuration
+from src.application.config.config import Configuration
 import argparse
 
 # region Parse Arguments
@@ -18,14 +18,14 @@ args = parser.parse_args()
 
 # region Run
 
-model, pipeline = configuration()
+conf = Configuration()
+model, pipeline = conf.get_configuration()
 stream(
     model=model,
     pipeline=pipeline,
     resolution=tuple(args.resolution),
     counter_interrupt=args.interrupt,
     file=args.file,
-    is_web=False,
 )
 
 # endregion
