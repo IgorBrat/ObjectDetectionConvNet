@@ -1,5 +1,5 @@
-# Ignore dataset
-dataset/
+# Ignore images
+images/prediction
 
 # Ignore keys and tokens
 /resources/config.py
