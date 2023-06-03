@@ -59,4 +59,3 @@ class Configuration:
             for row in l_file.readlines():
                 class_key, class_name = row.split(",")
                 self.labels[class_key] = class_name
-        print(self.labels)

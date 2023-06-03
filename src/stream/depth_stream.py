@@ -67,19 +67,8 @@ def stream(
 
             set_predictions_depth(init_depth_frame, formatted_predictions)
 
-            for pred in formatted_predictions:
-                dbmanager.insert_row(
-                    left_coord=pred["box"][0],
-                    top_coord=pred["box"][1],
-                    right_coord=pred["box"][2],
-                    bottom_coord=pred["box"][3],
-                    confidence=pred["confidence"],
-                    class_name=pred["class"],
-                    depth=pred["depth"],
-                    image=f"images\prediction\output{images_count + 1}.png",
-                )
-
             if predictions:
+                dbmanager.insert_predictions(formatted_predictions, images_count + 1)
                 cv2.imwrite(f"images\prediction\output{images_count + 1}.png", color_frame)
                 images_count += 1
 
