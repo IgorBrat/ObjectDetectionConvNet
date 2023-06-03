@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <h1>IntelSenseD451i Object Detection</h1>
-        <img src="{{ url_for('depth_video') }}" alt="Camera Color Stream" width="50%">
+        <div>
+            <h1>IntelSenseD451i Object Detection</h1>
+            <img src="{{ url_for('depth_video') }}" alt="Camera Color Stream" width="50%">
+        </div>
+        <div>
+            <a href="/predictions">
+                <button>Go to Predictions</button>
+            </a>
+        </div>
     </body>
 </html>

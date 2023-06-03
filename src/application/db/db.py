@@ -68,6 +68,10 @@ class DBManager:
         except OperationalError as msg:
             print("Error occurred while inserting into `image`: ", msg)
 
+    def select_predictions(self):
+        self.__cursor.execute("SELECT * FROM object_detection.prediction")
+        return self.__cursor.fetchall()
+
     def __insert_prediction_image(self, image_id, prediction_id):
         try:
             sql = f"INSERT INTO {DB_DATABASE}.{TABLE_IMAGE_PREDICTION} ({', '.join(COLUMNS_IMAGE_PREDICTION)}) " \
