@@ -1,7 +1,7 @@
 import mysql.connector
-from resources.config import DB_DATABASE, DB_PASSWORD, DB_USER, DB_HOST, DB_TABLE, DB_COLUMNS
+from mysql.connector import OperationalError
 
-print(', '.join(DB_COLUMNS))
+from resources.config import DB_DATABASE, DB_PASSWORD, DB_USER, DB_HOST, DB_TABLE, DB_COLUMNS
 
 
 class DBManager:
@@ -16,6 +16,21 @@ class DBManager:
         self.__cursor = self.__mydb.cursor()
         self.__columns = ', '.join(DB_COLUMNS)
         self.__markers = "%s, " * 7 + "%s"
+        # TODO: Remove when project is finished
+        self.__setup_db()
+
+    def __setup_db(self):
+        # Open and read the file as a single buffer
+        with open('resources\db\setup.sql', 'r') as sql_file:
+            sql_commands = sql_file.read().split(';')
+            sql_file.close()
+
+        # Execute every command from the input file
+        for command in sql_commands:
+            try:
+                self.__cursor.execute(command)
+            except OperationalError as msg:
+                print("Command skipped: ", msg)
 
     def insert_row(self, left_coord, top_coord, right_coord, bottom_coord, confidence, class_name, depth, image):
         try:

@@ -1,7 +1,7 @@
 import cv2
 
 
-def format_preds(predictions):
+def format_predictions(predictions, labels: dict):
     formatted_predictions = []
     for pred in predictions:
         formatted_pred = {
@@ -12,7 +12,7 @@ def format_preds(predictions):
                 int(pred["y"] + pred["height"] / 2),
             ],
             'confidence': round(pred["confidence"], 3),
-            'class': pred["class"],
+            'class': labels[pred["class"]],
             'depth': 0,
         }
         formatted_predictions.append(formatted_pred)

@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 from src.depth.depth import set_predictions_depth
-from src.utils.format_utils.format import format_preds, get_colormap
+from src.utils.format_utils.format import format_predictions, get_colormap
 from src.utils.graphic_utils.plot_boxes import plot_predictions
 from src.utils.util import count_images_in_directory
 from src.application.db.db import DBManager
@@ -12,9 +12,11 @@ from src.application.db.db import DBManager
 def stream(
         model,
         pipeline,
+        labels: dict,
         resolution: tuple[int, int] = (720, 564),
         counter_interrupt: int = 30,
         is_web: bool = False,
+        # confidence_rate: int = 0,
 ):
     dbmanager = DBManager()
     images_count = count_images_in_directory()
@@ -58,20 +60,13 @@ def stream(
             response = pred.json()
             predictions = response["predictions"]
 
-            # TODO: Don`t use prediction.save(), as it throws error. Use cv2.imwrite(...args)
-            pred.save(f"images\prediction\output{images_count + 1}.png")
-            if predictions:
-                images_count += 1
-
-            formatted_predictions = format_preds(predictions)
+            formatted_predictions = format_predictions(predictions, labels)
             saved_predictions = formatted_predictions
             plot_predictions(color_frame, formatted_predictions)
             plot_predictions(depth_colormap, formatted_predictions)
 
             set_predictions_depth(init_depth_frame, formatted_predictions)
 
-            # TODO: Check if works
-            # Save predictions to database
             for pred in formatted_predictions:
                 dbmanager.insert_row(
                     left_coord=pred["box"][0],
@@ -81,8 +76,12 @@ def stream(
                     confidence=pred["confidence"],
                     class_name=pred["class"],
                     depth=pred["depth"],
-                    image=f"images\prediction\output{images_count}.png",
+                    image=f"images\prediction\output{images_count + 1}.png",
                 )
+
+            if predictions:
+                cv2.imwrite(f"images\prediction\output{images_count + 1}.png", color_frame)
+                images_count += 1
 
         # putting the FPS count on the frame
         cv2.putText(color_frame, fps, (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (100, 255, 0), 3, cv2.LINE_AA)

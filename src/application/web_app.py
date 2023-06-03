@@ -2,6 +2,7 @@ from flask import Flask, render_template, Response
 
 from src.application.config.config import Configuration
 from src.stream.depth_stream import stream
+from src.utils.util import clear_directory
 
 app = Flask(__name__)
 
@@ -11,6 +12,8 @@ def generate_frames():
         model=model,
         pipeline=pipeline,
         is_web=True,
+        # confidence_rate=0.75,
+        labels=conf.labels,
     )
 
 
@@ -25,6 +28,7 @@ def depth_video():
 
 
 if __name__ == "__main__":
+    clear_directory("images\prediction")
     conf = Configuration()
     model, pipeline = conf.get_configuration()
     print("Ready to go!")
