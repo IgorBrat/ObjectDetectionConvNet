@@ -37,7 +37,7 @@ def display_predictions():
 
 
 if __name__ == "__main__":
-    # clear_directory("images\prediction")
+    clear_directory("images\prediction")
     conf = Configuration()
     model, pipeline = conf.get_configuration()
     print("Ready to go!")

@@ -18,7 +18,7 @@ class DBManager:
         self.__pred_columns = ', '.join(COLUMNS_PREDICTION)
         self.__pred_markers = "%s, " * 7 + "%s"
         # TODO: Remove when project is finished
-        self.__setup_db()
+        # self.__setup_db()
 
     def __setup_db(self):
         # Open and read the file as a single buffer

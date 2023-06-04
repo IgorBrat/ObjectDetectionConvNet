@@ -1,12 +1,13 @@
 import cv2
 import numpy as np
 import time
+from datetime import datetime
 
 from src.depth.depth import set_predictions_depth
 from src.utils.format_utils.format import format_predictions, get_colormap
 from src.utils.graphic_utils.plot_boxes import plot_predictions
 from src.utils.util import count_images_in_directory
-from src.application.db.db import DBManager
+from src.application.web_app import dbmanager
 
 
 def stream(
@@ -18,7 +19,6 @@ def stream(
         is_web: bool = False,
         # confidence_rate: int = 0,
 ):
-    dbmanager = DBManager()
     images_count = count_images_in_directory()
 
     prev_frame_time = 0
@@ -46,6 +46,7 @@ def stream(
         fps = str(int(1 / (new_frame_time - prev_frame_time)))
         prev_frame_time = new_frame_time
 
+        # TODO: FIX IT - duplicates previous predictions on current frame
         if saved_predictions:
             plot_predictions(color_frame, saved_predictions)
             plot_predictions(depth_colormap, saved_predictions)
@@ -68,6 +69,7 @@ def stream(
             set_predictions_depth(init_depth_frame, formatted_predictions)
 
             if predictions:
+                # TODO: Save datetime
                 dbmanager.insert_predictions(formatted_predictions, images_count + 1)
                 cv2.imwrite(f"images\prediction\output{images_count + 1}.png", color_frame)
                 images_count += 1
