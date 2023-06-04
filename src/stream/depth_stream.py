@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 import time
 from datetime import datetime
 
@@ -71,7 +72,7 @@ def stream(
             if predictions:
                 # TODO: Save datetime
                 DBMANAGER.insert_predictions(formatted_predictions, images_count + 1)
-                cv2.imwrite(f"images\prediction\output{images_count + 1}.png", color_frame)
+                cv2.imwrite(os.getcwd() + f"images\prediction\output{images_count + 1}.png", color_frame)
                 images_count += 1
 
         # putting the FPS count on the frame
