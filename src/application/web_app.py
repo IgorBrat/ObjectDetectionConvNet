@@ -3,11 +3,9 @@ from flask import Flask, render_template, Response
 from src.application.config.config import Configuration
 from src.stream.depth_stream import stream
 from src.utils.util import clear_directory
-from src.application.db.db import DBManager
+from src.application.db.db import DBMANAGER
 
 app = Flask(__name__)
-
-dbmanager = DBManager()
 
 
 def generate_frames():
@@ -32,7 +30,7 @@ def depth_video():
 
 @app.route('/predictions')
 def display_predictions():
-    predictions = dbmanager.select_predictions()
+    predictions = DBMANAGER.select_predictions()
     return render_template('predictions.html', predictions=predictions)
 
 

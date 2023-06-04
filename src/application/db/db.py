@@ -82,3 +82,6 @@ class DBManager:
             self.__mydb.commit()
         except OperationalError as msg:
             print("Error occurred while inserting into `prediction_image`: ", msg)
+
+
+DBMANAGER = DBManager()

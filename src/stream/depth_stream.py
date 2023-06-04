@@ -7,7 +7,7 @@ from src.depth.depth import set_predictions_depth
 from src.utils.format_utils.format import format_predictions, get_colormap
 from src.utils.graphic_utils.plot_boxes import plot_predictions
 from src.utils.util import count_images_in_directory
-from src.application.web_app import dbmanager
+from src.application.db.db import DBMANAGER
 
 
 def stream(
@@ -70,7 +70,7 @@ def stream(
 
             if predictions:
                 # TODO: Save datetime
-                dbmanager.insert_predictions(formatted_predictions, images_count + 1)
+                DBMANAGER.insert_predictions(formatted_predictions, images_count + 1)
                 cv2.imwrite(f"images\prediction\output{images_count + 1}.png", color_frame)
                 images_count += 1
 
