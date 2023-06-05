@@ -9,24 +9,30 @@
         <a href="/">
             <button>Stream</button>
         </a>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>LEFT</th>
-                <th>TOP</th>
-                <th>RIGHT</th>
-                <th>BOTTOM</th>
-                <th>CONFIDENCE</th>
-                <th>CLASS</th>
-                <th>DEPTH</th>
-            </tr>
-            {% for prediction in predictions %}
-            <tr>
-                {% for attribute in prediction[:-1] %}
-                <td>{{ attribute }}</td>
+        <!--TODO: Parse images from db-->
+        {% for image in images %}
+        <div>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>LEFT</th>
+                    <th>TOP</th>
+                    <th>RIGHT</th>
+                    <th>BOTTOM</th>
+                    <th>CONFIDENCE</th>
+                    <th>CLASS</th>
+                    <th>DEPTH</th>
+                </tr>
+                {% for prediction in predictions %}
+                <tr>
+                    {% for attribute in prediction[:-1] %}
+                    <td>{{ attribute }}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
+            </table>
+            <img src="images/prediction" alt="Image {{image[0]}}">
+        </div>
+        {% endfor %}
     </body>
 </html>

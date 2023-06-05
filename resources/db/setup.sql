@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS `object_detection`.`prediction` (
   `confidence` FLOAT(3) NOT NULL,
   `class` VARCHAR(20) NOT NULL,
   `depth` FLOAT(3) NOT NULL,
-  `image_id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ;
 

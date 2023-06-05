@@ -7,7 +7,7 @@ from resources.config import DB_DATABASE, DB_PASSWORD, DB_USER, DB_HOST, TABLE_P
 
 
 class DBManager:
-    def __init__(self):
+    def __init__(self, debug_mode: bool = False):
         self.__mydb = mysql.connector.connect(
             host=DB_HOST,
             user=DB_USER,
@@ -18,8 +18,8 @@ class DBManager:
         self.__cursor = self.__mydb.cursor()
         self.__pred_columns = ', '.join(COLUMNS_PREDICTION)
         self.__pred_markers = "%s, " * 7 + "%s"
-        # TODO: Remove when project is finished
-        self.__setup_db()
+        if debug_mode:
+            self.__setup_db()
 
     def __setup_db(self):
         # Open and read the file as a single buffer
@@ -72,6 +72,22 @@ class DBManager:
     def select_predictions(self):
         self.__cursor.execute("SELECT * FROM object_detection.prediction")
         return self.__cursor.fetchall()
+
+    def select_image_predictions(self):
+        res = []
+        self.__cursor.execute(f"SELECT * FROM object_detection.image")
+        images = self.__cursor.fetchall()
+        for curr_id in range(1, len(images) + 1):
+            self.__cursor.execute(
+                f"SELECT prediction.id, prediction.left_coord, prediction.top_coord, prediction.right_coord, "
+                f"prediction.bottom_coord, prediction.confidence, prediction.class, prediction.depth "
+                f"FROM object_detection.prediction "
+                f"JOIN image_prediction ON prediction_id = prediction.id "
+                f"JOIN image ON image.id = image_id "
+                f"WHERE image.id = {curr_id} ")
+            curr_predictions = self.__cursor.fetchall()
+            res.append((images[curr_id], curr_predictions))
+        return res
 
     def __insert_prediction_image(self, image_id, prediction_id):
         try:

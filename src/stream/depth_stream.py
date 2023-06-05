@@ -85,8 +85,8 @@ def stream(
         if is_web:
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + cv2.imencode('.jpg', color_frame)[1].tobytes() + b'\r\n')
-        cv2.startWindowThread()
-        cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-        cv2.imshow('RealSense', frames)
+        # cv2.startWindowThread()
+        # cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
+        # cv2.imshow('RealSense', frames)
 
     cv2.destroyAllWindows()

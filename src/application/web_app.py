@@ -1,4 +1,5 @@
 from flask import Flask, render_template, Response
+import os
 
 from src.application.config.config import Configuration
 from src.stream.depth_stream import stream
@@ -35,7 +36,7 @@ def display_predictions():
 
 
 if __name__ == "__main__":
-    clear_directory("images\prediction")
+    clear_directory(os.getcwd() + "\images\prediction")
     conf = Configuration()
     model, pipeline = conf.get_configuration()
     print("Ready to go!")
