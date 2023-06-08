@@ -22,5 +22,5 @@ def clear_directory(directory: str):
 
 def convert_path(path: str, is_linux: bool = True):
     if is_linux:
-        path.replace('\\', '/')
+        path = path.replace('\\', '/')
     return path
