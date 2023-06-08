@@ -2,13 +2,13 @@ import cv2
 import numpy as np
 import os
 import time
-from datetime import datetime
 
 from src.depth.depth import set_predictions_depth
 from src.utils.format_utils.format import format_predictions, get_colormap
 from src.utils.graphic_utils.plot_boxes import plot_predictions
 from src.utils.util import count_images_in_directory, convert_path
 from src.application.db.db import DBMANAGER
+from resources.config import IS_LINUX
 
 
 def stream(
@@ -72,7 +72,7 @@ def stream(
             if predictions:
                 # TODO: Save datetime
                 DBMANAGER.insert_predictions(formatted_predictions, images_count + 1)
-                cv2.imwrite(os.getcwd() + convert_path(f"\\images\\prediction\\output{images_count + 1}.png"),
+                cv2.imwrite(os.getcwd() + convert_path(f"\\images\\prediction\\output{images_count + 1}.png", IS_LINUX),
                             color_frame)
                 images_count += 1
 

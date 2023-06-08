@@ -4,7 +4,7 @@ from mysql.connector import OperationalError
 from src.utils.util import convert_path
 
 from resources.config import DB_DATABASE, DB_PASSWORD, DB_USER, DB_HOST, TABLE_PREDICTION, COLUMNS_PREDICTION, \
-    TABLE_IMAGE, COLUMNS_IMAGE, TABLE_IMAGE_PREDICTION, COLUMNS_IMAGE_PREDICTION
+    TABLE_IMAGE, COLUMNS_IMAGE, TABLE_IMAGE_PREDICTION, COLUMNS_IMAGE_PREDICTION, IS_LINUX
 
 
 class DBManager:
@@ -24,7 +24,7 @@ class DBManager:
 
     def __setup_db(self):
         # Open and read the file as a single buffer
-        with open(os.getcwd() + convert_path("\\resources\\db\\setup.sql"), 'r') as sql_file:
+        with open(os.getcwd() + convert_path("\\resources\\db\\setup.sql", IS_LINUX), 'r') as sql_file:
             sql_commands = sql_file.read().split(';')
             sql_file.close()
 
@@ -59,7 +59,7 @@ class DBManager:
             print("Error occurred while inserting into `prediction`: ", msg)
 
     def insert_image(self, image_id):
-        image = os.getcwd() + convert_path(f"\\images\\prediction\\output{image_id}.png")
+        image = os.getcwd() + convert_path(f"\\images\\prediction\\output{image_id}.png", IS_LINUX)
         try:
             sql = f"INSERT INTO {DB_DATABASE}.{TABLE_IMAGE} ({COLUMNS_IMAGE[0]}) VALUES (%s)"
             val = [image]

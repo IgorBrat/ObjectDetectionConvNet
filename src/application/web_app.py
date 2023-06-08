@@ -5,6 +5,7 @@ from src.application.config.config import Configuration
 from src.stream.depth_stream import stream
 from src.utils.util import clear_directory, convert_path
 from src.application.db.db import DBMANAGER
+from resources.config import IS_LINUX
 
 app = Flask(__name__)
 
@@ -41,9 +42,8 @@ def serve_image(filename):
 
 
 if __name__ == "__main__":
-    clear_directory(os.getcwd() + convert_path("\\images\\prediction"))
+    clear_directory(os.getcwd() + convert_path("\\images\\prediction", IS_LINUX))
     conf = Configuration()
     model, pipeline = conf.get_configuration()
     print("Ready to go!")
-    # app.config['IMAGE_DIR'] = os.getcwd() + convert_path("\\images\\prediction")
     app.run(debug=False, host="0.0.0.0")

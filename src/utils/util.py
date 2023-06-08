@@ -1,10 +1,11 @@
 import os
 import os.path
 import shutil
+from resources.config import IS_LINUX
 
 
 def count_images_in_directory():
-    dir_images = os.getcwd() + convert_path('\\images\\prediction')
+    dir_images = os.getcwd() + convert_path('\\images\\prediction', IS_LINUX)
     return len([name for name in os.listdir(dir_images) if os.path.isfile(os.path.join(dir_images, name))])
 
 
