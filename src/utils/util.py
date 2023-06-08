@@ -4,7 +4,7 @@ import shutil
 
 
 def count_images_in_directory():
-    dir_images = os.getcwd() + '\images\prediction'
+    dir_images = os.getcwd() + convert_path('\\images\\prediction')
     return len([name for name in os.listdir(dir_images) if os.path.isfile(os.path.join(dir_images, name))])
 
 
