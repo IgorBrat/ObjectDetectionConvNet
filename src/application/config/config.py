@@ -1,6 +1,8 @@
 from roboflow import Roboflow
 import pyrealsense2 as rs
 import resources.config as rc
+import os
+from src.utils.util import convert_path
 
 
 class Configuration:
@@ -55,7 +57,7 @@ class Configuration:
 
     def __load_labels(self):
         self.labels = {}
-        with open("resources/labels.txt", "r") as l_file:
+        with open(os.getcwd() + convert_path("\\resources\\labels.txt"), "r") as l_file:
             for row in l_file.readlines():
                 class_key, class_name = row.split(",")
                 self.labels[class_key] = class_name

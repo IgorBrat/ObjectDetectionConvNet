@@ -1,9 +1,9 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, send_file
 import os
 
 from src.application.config.config import Configuration
 from src.stream.depth_stream import stream
-from src.utils.util import clear_directory
+from src.utils.util import clear_directory, convert_path
 from src.application.db.db import DBMANAGER
 
 app = Flask(__name__)
@@ -31,13 +31,19 @@ def depth_video():
 
 @app.route('/predictions')
 def display_predictions():
-    predictions = DBMANAGER.select_predictions()
-    return render_template('predictions.html', predictions=predictions)
+    res = DBMANAGER.select_image_predictions()
+    return render_template('predictions.html', images_predictions=res)
+
+
+@app.route('/images/<filename>')
+def serve_image(filename):
+    return send_file(filename)
 
 
 if __name__ == "__main__":
-    clear_directory(os.getcwd() + "\images\prediction")
+    clear_directory(os.getcwd() + convert_path("\\images\\prediction"))
     conf = Configuration()
     model, pipeline = conf.get_configuration()
     print("Ready to go!")
+    # app.config['IMAGE_DIR'] = os.getcwd() + convert_path("\\images\\prediction")
     app.run(debug=False, host="0.0.0.0")

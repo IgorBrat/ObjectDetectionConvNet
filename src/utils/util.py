@@ -18,3 +18,9 @@ def clear_directory(directory: str):
                 shutil.rmtree(file_path)
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+
+def convert_path(path: str, is_linux: bool = True):
+    if is_linux:
+        path.replace('\\', '/')
+    return path

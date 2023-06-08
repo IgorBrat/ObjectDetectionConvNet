@@ -10,7 +10,7 @@
             <button>Stream</button>
         </a>
         <!--TODO: Parse images from db-->
-        {% for image in images %}
+        {% for current_item in images_predictions %}
         <div>
             <table>
                 <tr>
@@ -23,15 +23,15 @@
                     <th>CLASS</th>
                     <th>DEPTH</th>
                 </tr>
-                {% for prediction in predictions %}
+                {% for prediction in current_item[1] %}
                 <tr>
-                    {% for attribute in prediction[:-1] %}
+                    {% for attribute in prediction %}
                     <td>{{ attribute }}</td>
                     {% endfor %}
                 </tr>
                 {% endfor %}
             </table>
-            <img src="images/prediction" alt="Image {{image[0]}}">
+            <img src="{{ url_for('serve_image', filename=current_item[0]) }}" alt="Image {{ current_item[0] }}">
         </div>
         {% endfor %}
     </body>
