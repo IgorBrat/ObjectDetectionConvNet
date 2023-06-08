@@ -1,6 +1,11 @@
 # Ignore images
 images/prediction
 
+# Ignore ROS2 packages
+src/object_detection/build
+src/object_detection/install
+src/object_detection/log
+
 # Ignore keys and tokens
 /resources/config.py
 
