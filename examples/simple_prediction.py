@@ -1,6 +1,7 @@
 from roboflow import Roboflow
+from resources.config import API_KEY
 
-rf = Roboflow(api_key="veY5zjWdtUDR43d11jCJ")
+rf = Roboflow(api_key=API_KEY)
 
 # version = rf.workspace("meva").project("hard-hat-sample-2zw77").version(3)
 

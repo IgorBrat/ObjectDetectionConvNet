@@ -14,6 +14,7 @@ class ObjectDetectionNode(Node):
             rclpy.qos.QoSPresetProfiles.SENSOR_DATA.value
         )
         self.gps_in_subs
+
         self.__longitude = 0
         self.__latitude = 0
         self.__altitude = 0

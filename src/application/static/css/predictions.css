@@ -41,4 +41,9 @@ button {
   background-color: #3e8e41;
 }
 
-
+.current_item {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

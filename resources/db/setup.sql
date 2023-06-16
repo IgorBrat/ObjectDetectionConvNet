@@ -13,6 +13,9 @@ CREATE TABLE IF NOT EXISTS `object_detection`.`prediction` (
   `confidence` FLOAT(3) NOT NULL,
   `class` VARCHAR(20) NOT NULL,
   `depth` FLOAT(3) NOT NULL,
+  `longitude` FLOAT(6) NOT NULL,
+  `latitude` FLOAT(6) NOT NULL,
+  `altitude` FLOAT(6) NOT NULL,
   PRIMARY KEY (`id`))
 ;
 

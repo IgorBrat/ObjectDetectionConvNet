@@ -1,11 +1,9 @@
 from flask import Flask, render_template, Response, send_file
-import os
 
+from object_detection.object_detection.node import ObjectDetectionNode
 from src.application.config.config import Configuration
 from src.stream.depth_stream import stream
-from src.utils.util import clear_directory, convert_path
 from src.application.db.db import DBMANAGER
-from resources.config import IS_LINUX
 
 app = Flask(__name__)
 
@@ -14,6 +12,7 @@ def generate_frames():
     return stream(
         model=model,
         pipeline=pipeline,
+        node=node,
         is_web=True,
         # confidence_rate=0.75,
         labels=conf.labels,
@@ -38,11 +37,12 @@ def display_predictions():
 
 @app.route('/images/<filename>')
 def serve_image(filename):
-    return send_file(filename)
+    return send_file(filename.replace("+", "/"))
 
 
 if __name__ == "__main__":
-    clear_directory(os.getcwd() + convert_path("\\images\\prediction", IS_LINUX))
+    rclpy.init()
+    node = ObjectDetectionNode()
     conf = Configuration()
     model, pipeline = conf.get_configuration()
     print("Ready to go!")

@@ -1,7 +1,7 @@
 import mysql.connector
 import os
 from mysql.connector import OperationalError
-from src.utils.util import convert_path
+from src.utils.util import convert_path, clear_directory
 
 from resources.config import DB_DATABASE, DB_PASSWORD, DB_USER, DB_HOST, TABLE_PREDICTION, COLUMNS_PREDICTION, \
     TABLE_IMAGE, COLUMNS_IMAGE, TABLE_IMAGE_PREDICTION, COLUMNS_IMAGE_PREDICTION, IS_LINUX
@@ -18,11 +18,12 @@ class DBManager:
 
         self.__cursor = self.__mydb.cursor()
         self.__pred_columns = ', '.join(COLUMNS_PREDICTION)
-        self.__pred_markers = "%s, " * 6 + "%s"
+        self.__pred_markers = "%s, " * 9 + "%s"
         if debug_mode:
             self.__setup_db()
 
     def __setup_db(self):
+        clear_directory(os.getcwd() + convert_path("\\images\\prediction", IS_LINUX))
         # Open and read the file as a single buffer
         with open(os.getcwd() + convert_path("\\resources\\db\\setup.sql", IS_LINUX), 'r') as sql_file:
             sql_commands = sql_file.read().split(';')
@@ -35,7 +36,7 @@ class DBManager:
             except OperationalError as msg:
                 print("Command skipped: ", msg)
 
-    def insert_predictions(self, predictions, image_id):
+    def insert_predictions(self, predictions, image_id, gps):
         self.insert_image(image_id)
         for pred in predictions:
             self.insert_prediction(
@@ -46,13 +47,14 @@ class DBManager:
                 confidence=pred["confidence"],
                 class_name=pred["class"],
                 depth=pred["depth"],
+                gps=gps,
             )
             self.__insert_prediction_image(image_id, self.__cursor.lastrowid)
 
-    def insert_prediction(self, left_coord, top_coord, right_coord, bottom_coord, confidence, class_name, depth):
+    def insert_prediction(self, left_coord, top_coord, right_coord, bottom_coord, confidence, class_name, depth, gps):
         try:
             sql = f"INSERT INTO {DB_DATABASE}.{TABLE_PREDICTION} ({self.__pred_columns}) VALUES ({self.__pred_markers})"
-            val = (left_coord, top_coord, right_coord, bottom_coord, confidence, class_name, depth)
+            val = (left_coord, top_coord, right_coord, bottom_coord, confidence, class_name, depth, *gps)
             self.__cursor.execute(sql, val)
             self.__mydb.commit()
         except OperationalError as msg:
@@ -85,7 +87,7 @@ class DBManager:
                 f"JOIN object_detection.image ON image.id = image_id "
                 f"WHERE image.id = {curr_id} ")
             curr_predictions = self.__cursor.fetchall()
-            res.append((images[curr_id - 1], curr_predictions))
+            res.append((images[curr_id - 1].replace("/", "+"), curr_predictions))
         return res
 
     def __insert_prediction_image(self, image_id, prediction_id):

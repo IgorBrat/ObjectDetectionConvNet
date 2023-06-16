@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 import time
+import rclpy
 
 from src.depth.depth import set_predictions_depth
 from src.utils.format_utils.format import format_predictions, get_colormap
@@ -14,6 +15,7 @@ from resources.config import IS_LINUX
 def stream(
         model,
         pipeline,
+        node,
         labels: dict,
         resolution: tuple[int, int] = (720, 564),
         counter_interrupt: int = 30,
@@ -29,6 +31,8 @@ def stream(
         counter += 1
 
         if cv2.waitKey(1) == ord('q'):
+            node.destroy_node()
+            rclpy.shutdown()
             break
 
         frames = pipeline.wait_for_frames()
@@ -47,17 +51,14 @@ def stream(
         fps = str(int(1 / (new_frame_time - prev_frame_time)))
         prev_frame_time = new_frame_time
 
-        # TODO: FIX IT - duplicates previous predictions on current frame
-        if saved_predictions:
-            plot_predictions(color_frame, saved_predictions)
-            plot_predictions(depth_colormap, saved_predictions)
-
         if counter == counter_interrupt:
             counter = 0
 
-            # color_frame = cv2.resize(color_frame, (200, 200))
+            # Get GPS
+            rclpy.spin_once(node)
+            gps = node.retrieve_gps_data()
 
-            # get predictions
+            # Get predictions
             pred = model.predict(color_frame)
             response = pred.json()
             predictions = response["predictions"]
@@ -71,18 +72,23 @@ def stream(
 
             if predictions:
                 # TODO: Save datetime
-                DBMANAGER.insert_predictions(formatted_predictions, images_count + 1)
+                DBMANAGER.insert_predictions(formatted_predictions, images_count + 1, gps)
                 cv2.imwrite(os.getcwd() + convert_path(f"\\images\\prediction\\output{images_count + 1}.png", IS_LINUX),
                             color_frame)
                 images_count += 1
 
-        # putting the FPS count on the frame
+        elif saved_predictions:
+            plot_predictions(color_frame, saved_predictions)
+            plot_predictions(depth_colormap, saved_predictions)
+
+        # Putting the FPS count on the frame
         cv2.putText(color_frame, fps, (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (100, 255, 0), 3, cv2.LINE_AA)
 
         depth_colormap = cv2.resize(depth_colormap, resolution)
         color_frame = cv2.resize(color_frame, resolution)
         frames = np.hstack((color_frame, depth_colormap))
 
+        # TODO: Fix if-else statement for web<->opencv; right now opencv does not always work
         if is_web:
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + cv2.imencode('.jpg', color_frame)[1].tobytes() + b'\r\n')
