@@ -2,10 +2,11 @@ from roboflow import Roboflow
 import time
 import random
 import cv2
+from resources.config import API_KEY
 
 COUNTER_INTERRUPT = 15
 
-rf = Roboflow(api_key="veY5zjWdtUDR43d11jCJ")
+rf = Roboflow(api_key=API_KEY)
 project = rf.workspace("meva").project("hard-hat-sample-2zw77")
 model = project.version(2).model
 

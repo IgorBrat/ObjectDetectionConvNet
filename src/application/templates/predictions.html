@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Predictions</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/predictions.css') }}">
+    </head>
+    <body>
+        <h1>Predictions</h1>
+        <a href="/">
+            <button>Stream</button>
+        </a>
+        <!--TODO: Parse images from db-->
+        {% for current_item in images_predictions %}
+        <div class="current_item">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>LEFT</th>
+                    <th>TOP</th>
+                    <th>RIGHT</th>
+                    <th>BOTTOM</th>
+                    <th>CONFIDENCE</th>
+                    <th>CLASS</th>
+                    <th>DEPTH</th>
+                </tr>
+                {% for prediction in current_item[1] %}
+                <tr>
+                    {% for attribute in prediction %}
+                    <td>{{ attribute }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+            <img src="{{ url_for('serve_image', filename=current_item[0]) }}" alt="Image {{ current_item[0] }}">
+        </div>
+        {% endfor %}
+    </body>
+</html>

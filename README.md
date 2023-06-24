@@ -2,7 +2,9 @@
 
 ![Logo](https://media.licdn.com/dms/image/C4D0BAQHyRPHoBnc1jw/company-logo_200_200/0/1661809948727?e=1692230400&v=beta&t=zYMOnSnJTzpcG3IdtkBmAlSCxk-L6lzfOF4mll_-ONM)
 
-### Run: `python -m src.application.app [args...]`
+### Run on device: `python -m src.application.app [args...]`
+### Run on server: `python -m src.application.web_app`
+
 
 ### Arguments:
 - `-h`, `--help` - get help
